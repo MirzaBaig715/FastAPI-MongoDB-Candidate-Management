@@ -1,0 +1,54 @@
+version: '3.12'
+
+services:
+  api:
+    container_name: "api"
+    build: .
+    image: candidate/fastapi
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - .:/app
+    networks:
+      - backtier
+
+  mongodb:
+    container_name: "mongodb"
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - backtier
+
+  redis:
+    container_name: "redis"
+    image: redis:latest
+    networks:
+      - backtier
+    ports:
+      - "6379:6379"
+
+  celery_worker:
+    container_name: "celery"
+    build: .
+    command: celery -A src.infrastructure.celery_app worker --loglevel=info
+    env_file:
+      - .env
+    networks:
+      - backtier
+    depends_on:
+      - redis
+      - mongodb
+
+volumes:
+  mongodb_data:
+
+networks:
+  backtier:

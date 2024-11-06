@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "fastapi-candidate-management"
+version = "0.1.0"
+description = "A FastAPI application for managing candidate profiles"
+authors = ["Your Name <your.email@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.104.0"
+uvicorn = "^0.23.2"
+motor = "^3.3.1"
+httpx = "^0.27.2"
+pydantic = {extras = ["email"], version = "^2.9.2"}
+email-validator = "^2.2.0"
+pydantic-settings = "^2.0.3"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+python-multipart = "^0.0.6"
+celery = "^5.3.4"
+redis = "^5.0.1"
+sentry-sdk = {extras = ["fastapi"], version = "^2.18.0"}
+python-dotenv = "^1.0.0"
+bcrypt = "^4.2.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+pytest-asyncio = "^0.21.1"
+pytest-cov = "^4.1.0"
+black = "^23.10.1"
+isort = "^5.12.0"
+flake8 = "^6.1.0"
+pre-commit = "^3.5.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
