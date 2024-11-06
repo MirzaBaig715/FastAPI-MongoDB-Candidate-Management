@@ -1,8 +1,9 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+
 from src.core.security import verify_token
-from src.domain.repositories.user_repository import UserRepository
 from src.domain.repositories.candidate_repository import CandidateRepository
+from src.domain.repositories.user_repository import UserRepository
 from src.infrastructure.database import db
 from src.services.auth_service import AuthService
 from src.services.candidate_service import CandidateService

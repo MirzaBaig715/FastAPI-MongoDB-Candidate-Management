@@ -1,7 +1,8 @@
+import logging
+import time
+
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
-import time
-import logging
 
 from src.core.exceptions import AppException
 

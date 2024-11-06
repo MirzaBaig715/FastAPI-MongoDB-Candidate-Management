@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import Generic, TypeVar, Optional
+from typing import Generic, Optional, TypeVar
+
 from motor.motor_asyncio import AsyncIOMotorCollection
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class BaseRepository(ABC, Generic[T]):
-
     def __init__(self, collection: AsyncIOMotorCollection):
         self.collection = collection
 

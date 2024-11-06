@@ -1,5 +1,6 @@
 import pytest
 from httpx import AsyncClient
+
 from src.main import app
 
 
@@ -12,8 +13,8 @@ async def test_register_user():
             json={
                 "email": "test@example.com",
                 "password": "testpass123",
-                "full_name": "Test User"
-            }
+                "full_name": "Test User",
+            },
         )
         assert response.status_code == 200
         data = response.json()
@@ -31,17 +32,14 @@ async def test_login():
             json={
                 "email": "test@example.com",
                 "password": "testpass123",
-                "full_name": "Test User"
-            }
+                "full_name": "Test User",
+            },
         )
 
         # Then try to login
         response = await client.post(
             "/api/v1/token",
-            data={
-                "username": "test@example.com",
-                "password": "testpass123"
-            }
+            data={"username": "test@example.com", "password": "testpass123"},
         )
         assert response.status_code == 200
         data = response.json()

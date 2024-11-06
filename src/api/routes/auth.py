@@ -1,16 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from src.domain.models.user import UserCreate, User
-from src.services.auth_service import AuthService
+
 from src.api.dependencies import get_auth_service
+from src.domain.models.user import User, UserCreate
+from src.services.auth_service import AuthService
 
 router = APIRouter()
 
 
 @router.post("/register", response_model=User)
 async def register(
-    user: UserCreate,
-    auth_service: AuthService = Depends(get_auth_service)
+    user: UserCreate, auth_service: AuthService = Depends(get_auth_service)
 ):
     """Register a new user."""
     try:
@@ -25,7 +25,7 @@ async def register(
 @router.post("/token")
 async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
-    auth_service: AuthService = Depends(get_auth_service)
+    auth_service: AuthService = Depends(get_auth_service),
 ):
     """Login to get access token."""
     user = await auth_service.authenticate_user(

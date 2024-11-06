@@ -1,6 +1,9 @@
 from typing import Optional
+
 from bson import ObjectId
-from src.domain.models.user import UserInDB, UserCreate
+
+from src.domain.models.user import UserCreate, UserInDB
+
 from .base import BaseRepository
 
 
@@ -27,8 +30,7 @@ class UserRepository(BaseRepository[UserInDB]):
     async def update(self, id: str, user: UserInDB) -> Optional[UserInDB]:
         update_data = user.model_dump(exclude={"id"})
         result = await self.collection.update_one(
-            {"_id": ObjectId(id)},
-            {"$set": update_data}
+            {"_id": ObjectId(id)}, {"$set": update_data}
         )
         if result.modified_count:
             return await self.get(id)

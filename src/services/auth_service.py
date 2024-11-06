@@ -1,6 +1,11 @@
 from typing import Optional
-from src.core.security import verify_password, create_access_token, get_password_hash
-from src.domain.models.user import UserCreate, User, UserInDB
+
+from src.core.security import (
+    create_access_token,
+    get_password_hash,
+    verify_password
+)
+from src.domain.models.user import User, UserCreate, UserInDB
 from src.domain.repositories.user_repository import UserRepository
 
 
@@ -11,9 +16,7 @@ class AuthService:
         self.user_repository = user_repository
 
     async def authenticate_user(
-            self,
-            email: str,
-            password: str
+            self, email: str, password: str
     ) -> Optional[UserInDB]:
         """Authenticate a user."""
         user = await self.user_repository.get_by_email(email)
@@ -23,7 +26,9 @@ class AuthService:
 
     async def create_user(self, user_create: UserCreate) -> User:
         """Create a new user."""
-        existing_user = await self.user_repository.get_by_email(user_create.email)
+        existing_user = await self.user_repository.get_by_email(
+            user_create.email
+        )
         if existing_user:
             raise ValueError("Email already registered")
 

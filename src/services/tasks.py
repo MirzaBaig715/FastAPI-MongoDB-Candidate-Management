@@ -1,7 +1,5 @@
 from celery import shared_task
-import csv
-from io import StringIO
-from src.infrastructure.celery_app import celery_app
+
 from src.services.candidate_service import CandidateService
 
 

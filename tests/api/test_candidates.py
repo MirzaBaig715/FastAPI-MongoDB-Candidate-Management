@@ -1,6 +1,8 @@
 import pytest
 from httpx import AsyncClient
+
 from src.main import app
+
 
 @pytest.mark.asyncio
 async def test_create_candidate(auth_token):
@@ -15,8 +17,8 @@ async def test_create_candidate(auth_token):
                 "position": "Software Engineer",
                 "experience": 5,
                 "skills": ["Python", "FastAPI"],
-                "status": "applied"
-            }
+                "status": "applied",
+            },
         )
         assert response.status_code == 200
         data = response.json()
@@ -36,7 +38,7 @@ async def test_search_candidates(auth_token):
                 "position": "Software Engineer",
                 "experience": 5,
                 "skills": ["Python", "FastAPI"],
-                "status": "applied"
+                "status": "applied",
             },
             {
                 "full_name": "Jane Smith",
@@ -44,21 +46,21 @@ async def test_search_candidates(auth_token):
                 "position": "Senior Developer",
                 "experience": 8,
                 "skills": ["Python", "Django"],
-                "status": "interviewed"
-            }
+                "status": "interviewed",
+            },
         ]
 
         for candidate in candidates:
             await client.post(
                 "/api/v1/candidates",
                 headers={"Authorization": f"Bearer {auth_token}"},
-                json=candidate
+                json=candidate,
             )
 
         # Test search
         response = await client.get(
             "/api/v1/candidates?query=Python",
-            headers={"Authorization": f"Bearer {auth_token}"}
+            headers={"Authorization": f"Bearer {auth_token}"},
         )
         assert response.status_code == 200
         data = response.json()

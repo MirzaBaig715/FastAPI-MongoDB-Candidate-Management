@@ -1,7 +1,14 @@
 from datetime import datetime
-from typing import Optional, List
+from typing import List, Optional
+
 from bson import ObjectId
-from src.domain.models.candidate import CandidateInDB, CandidateCreate, CandidateUpdate
+
+from src.domain.models.candidate import (
+    CandidateCreate,
+    CandidateInDB,
+    CandidateUpdate
+)
+
 from .base import BaseRepository
 
 
@@ -16,7 +23,9 @@ class CandidateRepository(BaseRepository[CandidateInDB]):
         return candidate_db
 
     async def get(self, id: str) -> Optional[CandidateInDB]:
-        if candidate_dict := await self.collection.find_one({"_id": ObjectId(id)}):
+        if candidate_dict := await self.collection.find_one(
+            {"_id": ObjectId(id)}
+        ):  # noqa: E501
             return CandidateInDB(**candidate_dict)
         return None
 
@@ -25,9 +34,12 @@ class CandidateRepository(BaseRepository[CandidateInDB]):
             return CandidateInDB(**candidate_dict)
         return None
 
-    async def update(self, id: str, candidate: CandidateUpdate) -> Optional[CandidateInDB]:
+    async def update(
+        self, id: str, candidate: CandidateUpdate
+    ) -> Optional[CandidateInDB]:
         update_data = {
-            k: v for k, v in candidate.model_dump(exclude_unset=True).items()
+            k: v
+            for k, v in candidate.model_dump(exclude_unset=True).items()
             if v is not None
         }
         if not update_data:
@@ -35,8 +47,7 @@ class CandidateRepository(BaseRepository[CandidateInDB]):
 
         update_data["updated_at"] = datetime.utcnow()
         result = await self.collection.update_one(
-            {"_id": ObjectId(id)},
-            {"$set": update_data}
+            {"_id": ObjectId(id)}, {"$set": update_data}
         )
         if result.modified_count:
             return await self.get(id)
@@ -47,10 +58,7 @@ class CandidateRepository(BaseRepository[CandidateInDB]):
         return bool(result.deleted_count)
 
     async def search(
-            self,
-            query: str,
-            skip: int = 0,
-            limit: int = 10
+        self, query: str, skip: int = 0, limit: int = 10
     ) -> tuple[List[CandidateInDB], int]:
         """Search candidates with pagination."""
         filter_query = {

@@ -32,7 +32,7 @@ git clone git@github.com:MirzaBaig715/FastAPI-MongoDB-Candidate-Management.git
 cd FastAPI-MongoDB-Candidate-Management
 ```
 
-2. Copy .env.example to .env and update the values:
+2. Copy .env.example to .env and update the values e.g. **_SENTRY_DSN_**:
 ```bash
 cp .env.example .env
 ```

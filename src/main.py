@@ -1,12 +1,13 @@
-from fastapi import FastAPI, Depends
+import sentry_sdk
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import OAuth2PasswordBearer
-from fastapi.middleware.cors import CORSMiddleware
-import sentry_sdk
+
+from src.api.middleware import LoggingMiddleware
+from src.api.routes import auth, candidates, health
 from src.config.settings import get_settings
 from src.infrastructure.database import db
-from src.api.routes import health, auth, candidates
-from src.api.middleware import LoggingMiddleware
 
 settings = get_settings()
 
@@ -21,10 +22,7 @@ if settings.SENTRY_DSN:
     )
 
 # FastAPI app initialization
-app = FastAPI(
-    title=settings.APP_NAME,
-    version="1.0.0"
-)
+app = FastAPI(title=settings.APP_NAME, version="1.0.0")
 
 # CORS middleware
 app.add_middleware(
@@ -45,10 +43,23 @@ async def startup_event():
 async def shutdown_event():
     await db.disconnect()
 
+
 # Register routers
-app.include_router(health.router, prefix=settings.API_V1_PREFIX, tags=["health"])
-app.include_router(auth.router, prefix=settings.API_V1_PREFIX, tags=["auth"])
-app.include_router(candidates.router, prefix=settings.API_V1_PREFIX, tags=["candidates"])
+app.include_router(
+    health.router,
+    prefix=settings.API_V1_PREFIX,
+    tags=["health"]
+)
+app.include_router(
+    auth.router,
+    prefix=settings.API_V1_PREFIX,
+    tags=["auth"]
+)
+app.include_router(
+    candidates.router,
+    prefix=settings.API_V1_PREFIX,
+    tags=["candidates"]
+)
 
 app.add_middleware(LoggingMiddleware)
 
@@ -63,7 +74,8 @@ def custom_openapi():
     openapi_schema = get_openapi(
         title="Candidate Management System API",
         version="1.0.0",
-        description="A modern API for managing candidate profiles and recruitment process",
+        description="A modern API for managing candidate "
+        "profiles and recruitment process",
         routes=app.routes,
     )
 
@@ -83,8 +95,3 @@ def custom_openapi():
 
 
 app.openapi = custom_openapi
-
-
-@app.get("/sentry-debug")
-async def trigger_error():
-    division_by_zero = 1 / 0

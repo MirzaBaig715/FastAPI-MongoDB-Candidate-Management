@@ -1,9 +1,11 @@
 import pytest
+
 from motor.motor_asyncio import AsyncIOMotorClient
+
 from src.config.settings import get_settings
-from src.infrastructure.database import Database
-from src.domain.repositories.user_repository import UserRepository
 from src.domain.repositories.candidate_repository import CandidateRepository
+from src.domain.repositories.user_repository import UserRepository
+from src.infrastructure.database import Database
 from src.services.auth_service import AuthService
 from src.services.candidate_service import CandidateService
 
@@ -15,7 +17,7 @@ async def db():
     """Database fixture."""
     test_db = Database()
     test_db.client = AsyncIOMotorClient(settings.MONGODB_URL)
-    test_db.db = test_db.client[f"{settings.MONGODB_DB_NAME}_test"]
+    test_db.db = test_db.client[f'{settings.MONGODB_DB_NAME}_test']
 
     yield test_db
 

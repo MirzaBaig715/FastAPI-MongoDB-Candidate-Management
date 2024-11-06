@@ -1,11 +1,13 @@
-from pydantic_settings import BaseSettings
+import os
 from functools import lru_cache
 from typing import Literal, Optional
-import os
+
+from pydantic_settings import BaseSettings
 
 
 class BaseAppSettings(BaseSettings):
     """Base application settings."""
+
     APP_NAME: str = "Candidate Management System"
     API_V1_PREFIX: str = "/api/v1"
     APP_ENV: Literal["local", "development", "production"] = "local"
@@ -28,6 +30,7 @@ class BaseAppSettings(BaseSettings):
 
 class LocalSettings(BaseAppSettings):
     """Local environment settings."""
+
     APP_ENV: Literal["local"] = "local"
 
     class Config:
@@ -36,6 +39,7 @@ class LocalSettings(BaseAppSettings):
 
 class DevelopmentSettings(BaseAppSettings):
     """Development environment settings."""
+
     APP_ENV: Literal["development"] = "development"
     MONGODB_URL: str = os.getenv("MONGODB_URL")
     MONGODB_DB_NAME: str = os.getenv("MONGODB_DB_NAME")
@@ -45,12 +49,15 @@ class DevelopmentSettings(BaseAppSettings):
 
 class ProductionSettings(BaseAppSettings):
     """Production environment settings."""
+
     APP_ENV: Literal["production"] = "production"
     MONGODB_URL: str = os.getenv("MONGODB_URL")
     MONGODB_DB_NAME: str = os.getenv("MONGODB_DB_NAME")
     JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY")
     REDIS_URL: str = os.getenv("REDIS_URL")
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 15)
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = os.getenv(
+        "ACCESS_TOKEN_EXPIRE_MINUTES", 15
+    )  # noqa: E501
 
 
 @lru_cache()
